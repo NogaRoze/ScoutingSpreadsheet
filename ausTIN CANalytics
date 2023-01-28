@@ -185,7 +185,7 @@ function scoutingSummaryHeader(){
     "Yellow_Flags", "Red_Flags", "Tipped_Over", 
     "Avg_Auton_Score", "Avg_Auton_GPs", 
     "Avg_Teleop_Score (no links)", "Avg_Teleop_GPs", 
-    "Avg_Endgame_Score", "Matches_Played"]
+    "Avg_Endgame_Score", "Pieces_Scored", "Matches_Played"]
 }
 
 function scoutingSummary(summaryObjects, scoutingObjects){
@@ -203,6 +203,7 @@ function scoutingSummary(summaryObjects, scoutingObjects){
       summaryObjects[k]['Avg_Teleop_GPs']=0;
       summaryObjects[k]['Avg_Endgame_Score']=0;
       summaryObjects[k]['Matches_Played']=0;
+      summaryObjects[k]['Pieces_Scored']="none";
    })
    Object.keys(scoutingObjects).forEach( k => {
       scoutingItem = scoutingObjects[k]
@@ -263,6 +264,34 @@ function scoutingSummary(summaryObjects, scoutingObjects){
           endgameScore +=10
         }
         summaryObjects[scoutingItem['Team Number']]['Avg_Endgame_Score'] += endgameScore
+      }
+
+      if ( summaryObjects[scoutingItem['Team Number']]['Pieces_Scored'] == "none" ) {
+        if (scoutingItem['Pieces Scored on Mid/High'] == "BOTH" ){
+            summaryObjects[scoutingItem['Team Number']]['Pieces_Scored'] = "both"
+          }
+        if (scoutingItem['Pieces Scored on Mid/High'] == "CUBES" ){
+            summaryObjects[scoutingItem['Team Number']]['Pieces_Scored'] = "cubes"
+          }
+        if (scoutingItem['Pieces Scored on Mid/High'] == "CONES" ){
+            summaryObjects[scoutingItem['Team Number']]['Pieces_Scored'] = "cones"
+          }
+      }
+      if ( summaryObjects[scoutingItem['Team Number']]['Pieces_Scored'] == "cones" ) {
+        if (scoutingItem['Pieces Scored on Mid/High'] == "BOTH" ){
+            summaryObjects[scoutingItem['Team Number']]['Pieces_Scored'] = "both"
+          }
+        if (scoutingItem['Pieces Scored on Mid/High'] == "CUBES" ){
+            summaryObjects[scoutingItem['Team Number']]['Pieces_Scored'] = "both"
+          }
+      }
+      if ( summaryObjects[scoutingItem['Team Number']]['Pieces_Scored'] == "cubes" ) {
+        if (scoutingItem['Pieces Scored on Mid/High'] == "BOTH" ){
+            summaryObjects[scoutingItem['Team Number']]['Pieces_Scored'] = "both"
+          }
+        if (scoutingItem['Pieces Scored on Mid/High'] == "CONES" ){
+            summaryObjects[scoutingItem['Team Number']]['Pieces_Scored'] = "both"
+          }
       }
    })  
   Object.keys(summaryObjects).forEach( k => {
@@ -706,7 +735,7 @@ function loadTeamDetails(ignoreCache) {
     if ( rankResults != null ){
       rankHeader.forEach(element => {data[i][header.indexOf(element)] = rankData[teamKey][rankHeader.indexOf(element)]} )
     }    
-  }
+ 
   data.unshift(header)
   sheet.getDataRange().setValues(data);
   
